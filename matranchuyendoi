@@ -23,8 +23,12 @@ def calculate():
 
     result_text.set(f"Ma trận đã nhập:\n{newarr}\n\nMa trận sau khi chuyển đổi:\n{x}")
 
+    # Tính tích hai ma trận
+    matrix_product = np.dot(newarr, x)
+    result_text.set(result_text.get() + f"\n\nTích hai ma trận:\n{matrix_product}")
+
 root = tk.Tk()
-root.title("Chuyển đổi ma trận")
+root.title("Chuyển đổi và tính tích ma trận")
 
 entry_values = []
 
@@ -43,3 +47,4 @@ result_label = tk.Label(root, textvariable=result_text, justify="left")
 result_label.grid(row=10, columnspan=2, padx=5, pady=5)
 
 root.mainloop()
+
