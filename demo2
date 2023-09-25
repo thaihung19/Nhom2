@@ -1,0 +1,122 @@
+import numpy as np
+import tkinter as tk
+from tkinter import messagebox
+
+def giai_he_phuong_trinh(A, B, method='inv'):
+    if method == 'inv':
+        try:
+            A_inv = np.linalg.inv(A)
+            X = np.dot(A_inv, B)
+            return X
+        except np.linalg.LinAlgError as e:
+            if "matran" in str(e):
+                return []
+            else:
+                raise e
+    elif method == 'det':
+        det_A = np.linalg.det(A)
+        if abs(det_A) < 1e-6:
+            return []  # Hệ phương trình vô nghiệm hoặc có vô số nghiệm
+        else:
+            X = np.linalg.solve(A, B)
+            return X
+    elif method == 'gauss_jordan':
+        augmented_matrix = np.column_stack((A, B))
+        X = np.linalg.solve(A, B)
+        return X
+    elif method == 'lstsq':
+        X, _, _, _ = np.linalg.lstsq(A, B)
+        return X
+    else:
+        raise ValueError("Phương pháp không hợp lệ.")
+
+def giai_he_phuong_trinh_gui():
+    try:
+        # Lấy số phương trình và số ẩn từ người dùng
+        n = int(num_equations.get())
+        m = int(num_variables.get())
+
+        # Khởi tạo ma trận hệ số A và vector B
+        A = np.zeros((n, m))
+        B = np.zeros(n)
+
+        # Lấy giá trị cho ma trận A và vector B
+        for i in range(n):
+            for j in range(m):
+                A[i][j] = float(entry_vars[i][j].get())
+            B[i] = float(entry_b[i].get())
+
+        # Chọn phương pháp giải hệ phương trình
+        chosen_method = method_choice.get()
+
+        # Giải hệ phương trình
+        X = giai_he_phuong_trinh(A, B, chosen_method)
+
+        # Hiển thị kết quả
+        if len(X) > 0:
+            result_text.set("Nghiệm của hệ phương trình:\n" + str(X))
+        elif len(X) == 0:
+            result_text.set("Hệ phương trình có vô số nghiệm hoặc vô nghiệm.")
+        else:
+            result_text.set("Hệ phương trình vô nghiệm.")
+    except Exception as e:
+        messagebox.showerror("Lỗi", str(e))
+
+# Tạo cửa sổ giao diện
+window = tk.Tk()
+window.title("Giải Hệ Phương Trình")
+
+# Tạo nhãn và ô nhập liệu cho số phương trình và số ẩn
+label_eq = tk.Label(window, text="Số phương trình:")
+label_eq.grid(row=0, column=0, padx=5, pady=5, sticky=tk.E)
+num_equations = tk.Entry(window)
+num_equations.grid(row=0, column=1, padx=5, pady=5)
+
+label_var = tk.Label(window, text="Số ẩn:")
+label_var.grid(row=1, column=0, padx=5, pady=5, sticky=tk.E)
+num_variables = tk.Entry(window)
+num_variables.grid(row=1, column=1, padx=5, pady=5)
+
+# Tạo nhãn và ô nhập liệu cho ma trận hệ số A
+label_matrix = tk.Label(window, text="Nhập ma trận hệ số A:")
+label_matrix.grid(row=2, column=0, padx=5, pady=5, sticky=tk.E)
+
+entry_vars = []
+for i in range(10):
+    row = []
+    for j in range(10):
+        entry = tk.Entry(window, width=8)
+        entry.grid(row=i+3, column=j+1, padx=2, pady=2)
+        row.append(entry)
+    entry_vars.append(row)
+
+# Tạo nhãn và ô nhập liệu cho vector B
+label_b = tk.Label(window, text="Nhập vector b:")
+label_b.grid(row=13, column=0, padx=5, pady=5, sticky=tk.E)
+
+entry_b = []
+for i in range(10):
+    entry = tk.Entry(window, width=8)
+    entry.grid(row=i+14, column=1, padx=2, pady=2)
+    entry_b.append(entry)
+
+# Tạo lựa chọn phương pháp giải hệ phương trình
+method_choice = tk.StringVar(window)
+method_choice.set("inv")  # Phương pháp mặc định là nghịch đảo ma trận
+methods = ["inv", "det", "gauss_jordan", "lstsq"]
+label_method = tk.Label(window, text="Phương pháp giải:")
+label_method.grid(row=0, column=2, padx=5, pady=5, sticky=tk.E)
+method_menu = tk.OptionMenu(window, method_choice, *methods)
+method_menu.grid(row=0, column=3, padx=5, pady=5)
+
+# Tạo nút giải phương trình
+solve_button = tk.Button(window, text="Giải", command=giai_he_phuong_trinh_gui)
+solve_button.grid(row=1, column=2, columnspan=2, padx=5, pady=5)
+
+# Tạo kết quả
+result_text = tk.StringVar()
+result_label = tk.Label(window, textvariable=result_text)
+result_label.grid(row=2, column=2, columnspan=2, padx=5, pady=5)
+
+# Chạy chương trình
+window.mainloop()
