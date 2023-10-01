@@ -27,9 +27,12 @@ def thuc_hien_yeu_cau(df):
     # Tổng số sinh viên đạt của tất cả các lớp
     tong_sv_dat_cua_tat_ca_lop = trung_binh_sv_dat.sum()
 
-    return tong_sv, tong_sv_dat_A, ti_le_dat_A, lop_max_A, trung_binh_sv_dat, tong_sv_dat_cua_tat_ca_lop
+    # Tính trung bình số sinh viên đạt điểm A của tất cả các lớp
+    trung_binh_sv_dat_A_cua_tat_ca_lop = trung_binh_sv_dat['Loại A'].mean()
 
-
+    return tong_sv, tong_sv_dat_A, ti_le_dat_A, lop_max_A, trung_binh_sv_dat, tong_sv_dat_cua_tat_ca_lop, 
+           trung_binh_sv_dat_A_cua_tat_ca_lop
+           
 
 # Bước 3: Vẽ biểu đồ phân bố điểm
 def ve_bieu_do(diem_counts):
@@ -54,15 +57,16 @@ def thuc_hien():
         df = doc_du_lieu(file_path)
 
         # Thực hiện các yêu cầu
-        tong_sv, tong_sv_dat_A, ti_le_dat_A, lop_max_A, trung_binh_sv_dat, tong_sv_dat_cua_tat_ca_lop = thuc_hien_yeu_cau(df)
+tong_sv, tong_sv_dat_A, ti_le_dat_A, lop_max_A, trung_binh_sv_dat, tong_sv_dat_cua_tat_ca_lop, trung_binh_sv_dat_A_cua_tat_ca_lop = thuc_hien_yeu_cau(df)
 
-        # Hiển thị kết quả
-        ket_qua_label.config(text=f"Tổng số sinh viên: {tong_sv}\nTổng số sinh viên đạt điểm A: {tong_sv_dat_A}\nTỉ lệ sinh viên đạt điểm A: {ti_le_dat_A:.2f}%\n"
-                                  f"Lớp có số sinh viên đạt điểm A cao nhất: {lop_max_A}\n"
-                                  f"Phân loại điểm của tất cả các lớp:\n{tong_sv_dat_cua_tat_ca_lop.to_string()}\n")
+# Hiển thị kết quả
+ket_qua_label.config(text=f"Tổng số sinh viên: {tong_sv}\nTổng số sinh viên đạt điểm A: {tong_sv_dat_A}\nTỉ lệ sinh viên đạt điểm A: {ti_le_dat_A:.2f}%\n"
+                          f"Lớp có số sinh viên đạt điểm A cao nhất: {lop_max_A}\n"
+                          f"Phân loại điểm của tất cả các lớp:\n{tong_sv_dat_cua_tat_ca_lop.to_string()}\n"
+                          f"Trung bình số sinh viên đạt điểm A của tất cả các lớp: {trung_binh_sv_dat_A_cua_tat_ca_lop:.2f}\n")
 
-        # Vẽ biểu đồ phân bố điểm
-        ve_bieu_do(df[['Loại A', 'Loại B+', 'Loại B', 'Loại C+', 'Loại C', 'Loại D+', 'Loại D', 'Loại F']].sum())
+# Vẽ biểu đồ phân bố điểm
+ve_bieu_do(df[['Loại A', 'Loại B+', 'Loại B', 'Loại C+', 'Loại C', 'Loại D+', 'Loại D', 'Loại F']].sum())
 
     except Exception as e:
         ket_qua_label.config(text=f"Đã xảy ra lỗi: {e}")
