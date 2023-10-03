@@ -82,21 +82,23 @@ def tinh_nhan_so_vo_huong():
         scalar = float(entry_scalar.get())
         if A is not None:
             result = scalar * A
-            result_display.config(state=tk.NORMAL)
-            result_display.delete(0, tk.END)
-            result_display.insert(0, str(result))
-            result_display.config(state=tk.DISABLED)
+            hien_thi_ket_qua(result)
         else:
-            result_display.config(state=tk.NORMAL)
-            result_display.delete(0, tk.END)
-            result_display.insert(0, "Lỗi: Sai định dạng ma trận")
-            result_display.config(state=tk.DISABLED)
+            hien_thi_loi("Sai định dạng ma trận")
     except Exception as e:
-        result_display.config(state=tk.NORMAL)
-        result_display.delete(0, tk.END)
-        result_display.insert(0, "Lỗi: " + str(e))
-        result_display.config(state=tk.DISABLED)
+        hien_thi_loi("Lỗi: " + str(e))
 
+def hien_thi_ket_qua(result):
+    result_display.config(state=tk.NORMAL)
+    result_display.delete(0, tk.END)
+    result_display.insert(0, str(result))
+    result_display.config(state=tk.DISABLED)
+
+def hien_thi_loi(error_message):
+    result_display.config(state=tk.NORMAL)
+    result_display.delete(0, tk.END)
+    result_display.insert(0, "Lỗi: " + error_message)
+    result_display.config(state=tk.DISABLED)
 
 
 # Tạo cửa sổ
@@ -135,16 +137,17 @@ button_tru.grid(row=2, column=1, pady=(0,10))
 button_nhan = tk.Button(root, text="Nhân Ma trận", command=tinh_nhan)
 button_nhan.grid(row=3, column=0, padx=(10,0), pady=(0,10))
 
-button_nhan = tk.Button(root, text="Nhân Ma trận với số vô hướng", command=tinh_nhan)
-button_nhan.grid(row=4, column=0, padx=(10,0), pady=(0,10))
+button_nhan_scalar = tk.Button(root, text="Nhân Ma trận với số vô hướng", command=tinh_nhan_so_vo_huong)
+button_nhan_scalar.grid(row=5, column=0, padx=(10,0), pady=(0,10))
+
 
 
 # Thêm vùng hiển thị kết quả
 result_label = tk.Label(root, text="Kết quả:")
-result_label.grid(row=5, column=0, columnspan=2, pady=(0,10))
+result_label.grid(row=6, column=0, columnspan=2, pady=(0,10))
 
 result_display = tk.Entry(root, width=40, state='readonly')
-result_display.grid(row=6, column=0, columnspan=2, pady=(0,10))
+result_display.grid(row=7, column=0, columnspan=2, pady=(0,10))
 
 # Chạy ứng dụng
 root.mainloop()
