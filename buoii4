@@ -19,12 +19,41 @@ def kiem_tra_tinh_chat_nghich_dao(matrix):
             if np.allclose(tich, don_vi):
                 return True
     return False
+import numpy as np
+
+# Định nghĩa hàm tinh_nghich_dao và kiem_tra_tinh_chat_nghich_dao ở đây...
+
+# Định nghĩa hàm cộng, trừ, nhân ma trận với số vô hướng
+def cong_ma_tran_voi_so(matrix, scalar):
+    return matrix + scalar
+
+def tru_ma_tran_voi_so(matrix, scalar):
+    return matrix - scalar
+
+def nhan_ma_tran_voi_so(matrix, scalar):
+    return matrix * scalar
+
+
+
 
 # Ví dụ sử dụng các hàm tính toán
 
 # Tạo ma trận ngẫu nhiên có kích thước lớn
 kich_thuoc = 1000
 ma_tran = np.random.rand(kich_thuoc, kich_thuoc)
+scalar = 2
+
+print("Ma trận ban đầu:")
+print(ma_tran)
+
+print("\nCộng ma trận với số vô hướng:")
+print(cong_ma_tran_voi_so(ma_tran, scalar))
+
+print("\nTrừ ma trận với số vô hướng:")
+print(tru_ma_tran_voi_so(ma_tran, scalar))
+
+print("\nNhân ma trận với số vô hướng:")
+print(nhan_ma_tran_voi_so(ma_tran, scalar))
 
 # Tính nghịch đảo của ma trận
 nghich_dao = tinh_nghich_dao(ma_tran)
