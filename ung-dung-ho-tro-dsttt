@@ -54,7 +54,26 @@ def tinh_tru():
         result_display.insert(0, "Lỗi: " + str(e))
         result_display.config(state=tk.DISABLED)
 
-
+def tinh_nhan():
+    try:
+        A = nhap_matran(entry_A.get())
+        scalar = float(entry_scalar.get())
+        if A is not None:
+            result = scalar * A
+            result_display.config(state=tk.NORMAL)
+            result_display.delete(0, tk.END)
+            result_display.insert(0, str(result))
+            result_display.config(state=tk.DISABLED)
+        else:
+            result_display.config(state=tk.NORMAL)
+            result_display.delete(0, tk.END)
+            result_display.insert(0, "Lỗi: Sai định dạng ma trận")
+            result_display.config(state=tk.DISABLED)
+    except Exception as e:
+        result_display.config(state=tk.NORMAL)
+        result_display.delete(0, tk.END)
+        result_display.insert(0, "Lỗi: " + str(e))
+        result_display.config(state=tk.DISABLED)
 
 
 
@@ -75,12 +94,22 @@ label_B.grid(row=1, column=0, padx=(10,0), pady=(0,10))
 entry_B = tk.Entry(root, width=20)
 entry_B.grid(row=1, column=1, padx=(0,10), pady=(0,10))
 
+label_scalar = tk.Label(root, text="Nhập số vô hướng:")
+label_scalar.grid(row=3, column=0, padx=(10, 0), pady=(0, 10))
+
+entry_scalar = tk.Entry(root, width=20)
+entry_scalar.grid(row=3, column=1, padx=(0, 10), pady=(0, 10))
+
+
 # Tạo các nút tính toán
 button_cong = tk.Button(root, text="Cộng Ma trận", command=tinh_cong)
 button_cong.grid(row=2, column=0, padx=(10,0), pady=(0,10))
 
 button_tru = tk.Button(root, text="Trừ Ma trận", command=tinh_tru)
 button_tru.grid(row=2, column=1, pady=(0,10))
+
+button_nhan = tk.Button(root, text="Nhân Ma trận với số vô hướng", command=tinh_nhan)
+button_nhan.grid(row=4, column=0, padx=(10,0), pady=(0,10))
 
 
 # Thêm vùng hiển thị kết quả
