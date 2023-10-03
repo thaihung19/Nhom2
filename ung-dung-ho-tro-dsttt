@@ -57,9 +57,9 @@ def tinh_tru():
 def tinh_nhan():
     try:
         A = nhap_matran(entry_A.get())
-        scalar = float(entry_scalar.get())
-        if A is not None:
-            result = scalar * A
+        B = nhap_matran(entry_B.get())
+        if A is not None and B is not None:
+            result = A * B
             result_display.config(state=tk.NORMAL)
             result_display.delete(0, tk.END)
             result_display.insert(0, str(result))
@@ -108,8 +108,8 @@ button_cong.grid(row=2, column=0, padx=(10,0), pady=(0,10))
 button_tru = tk.Button(root, text="Trừ Ma trận", command=tinh_tru)
 button_tru.grid(row=2, column=1, pady=(0,10))
 
-button_nhan = tk.Button(root, text="Nhân Ma trận với số vô hướng", command=tinh_nhan)
-button_nhan.grid(row=4, column=0, padx=(10,0), pady=(0,10))
+button_nhan = tk.Button(root, text="Nhân Ma trận", command=tinh_nhan)
+button_nhan.grid(row=3, column=0, padx=(10,0), pady=(0,10))
 
 
 # Thêm vùng hiển thị kết quả
