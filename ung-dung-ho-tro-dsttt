@@ -88,6 +88,17 @@ def tinh_nhan_so_vo_huong():
     except Exception as e:
         hien_thi_loi("Lỗi: " + str(e))
 
+def tinh_dinh_thuc():
+    try:
+        A = nhap_matran(entry_A.get())
+        if A is not None:
+            determinant = det(A)
+            hien_thi_ket_qua("Định thức: " + str(determinant))
+        else:
+            hien_thi_loi("Sai định dạng ma trận")
+    except Exception as e:
+        hien_thi_loi("Lỗi: " + str(e))
+
 def hien_thi_ket_qua(result):
     result_display.config(state=tk.NORMAL)
     result_display.delete(0, tk.END)
@@ -139,6 +150,9 @@ button_nhan.grid(row=3, column=0, padx=(10,0), pady=(0,10))
 
 button_nhan_scalar = tk.Button(root, text="Nhân Ma trận với số vô hướng", command=tinh_nhan_so_vo_huong)
 button_nhan_scalar.grid(row=5, column=0, padx=(10,0), pady=(0,10))
+
+button_dinh_thuc = tk.Button(root, text="Tính Định thức", command=tinh_dinh_thuc)
+button_dinh_thuc.grid(row=8, column=0, padx=(10, 0), pady=(0, 10))
 
 
 
