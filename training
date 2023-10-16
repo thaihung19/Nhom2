@@ -3,28 +3,26 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import pandas as pd
 
-# Generating random linear data
-x = np.linspace(0, 50, 50)
-y = np.linspace(0, 50, 50)
+# Load data from CSV file
+df = pd.read_csv('Student_Performance.csv')
 
-# Add some noise to the data
-x += np.random.uniform(-4, 4, 50)
-y += np.random.uniform(-4, 4, 50)
-n = len(x)
+# Split the data into training and testing sets (50% training, 50% testing)
+split_ratio = 0.5
+split_index = int(len(df) * split_ratio)
+train_data = df.iloc[:split_index]
+test_data = df.iloc[split_index:]
 
-# Plot of Training Data
-plt.scatter(x, y)
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title("Training Data")
-plt.show()
+# Extract features and target from the data
+train_x = train_data.drop('Performance Index', axis=1)
+train_y = train_data['Performance Index']
+test_x = test_data.drop('Performance Index', axis=1)
 
 # Create a model for the data
-X = tf.constant(x, dtype=tf.float32)
-Y = tf.constant(y, dtype=tf.float32)
+X = tf.constant(train_x, dtype=tf.float32)
+Y = tf.constant(train_y, dtype=tf.float32)
 
 # Initialize variables (weights and bias)
-W = tf.Variable(np.random.randn(), name="W", dtype=tf.float32)
+W = tf.Variable(np.random.randn(len(train_x.columns), 1), name="W", dtype=tf.float32)
 b = tf.Variable(np.random.randn(), name="b", dtype=tf.float32)
 
 # Set learning rate
@@ -33,13 +31,16 @@ learning_rate = 0.01
 # Number of training epochs
 training_epochs = 100
 
+
 # Linear regression model
 def linear_regression(x):
-    return W * x + b
+    return tf.matmul(x, W) + b
+
 
 # Mean Squared Error Cost Function
 def mean_squared_error(y_true, y_pred):
     return tf.reduce_mean(tf.square(y_true - y_pred) / 2)
+
 
 # Optimization using Gradient Descent
 optimizer = tf.optimizers.SGD(learning_rate)
@@ -49,25 +50,18 @@ for epoch in range(training_epochs):
     with tf.GradientTape() as tape:
         predictions = linear_regression(X)
         loss = mean_squared_error(Y, predictions)
-    
+
     gradients = tape.gradient(loss, [W, b])
     optimizer.apply_gradients(zip(gradients, [W, b]))
-    
+
     if (epoch + 1) % 50 == 0:
-        print("Epoch", (epoch + 1), ": loss =", loss.numpy(), "W =", W.numpy(), "b =", b.numpy())
+        print("Epoch", (epoch + 1), ": loss =", loss.numpy())
 
-# Training cost
-training_cost = mean_squared_error(Y, linear_regression(X)).numpy()
-weight = W.numpy()
-bias = b.numpy()
+# Use the trained model to make predictions on the test set
+test_x = tf.constant(test_x, dtype=tf.float32)
+test_predictions = linear_regression(test_x)
 
-# Calculate predictions
-predictions = weight * x + bias
-print("Training cost =", training_cost, "Weight =", weight, "bias =", bias, '\n')
+# Calculate the test loss
+test_loss = mean_squared_error(test_data['Performance Index'], test_predictions)
 
-# Plotting the Results
-plt.plot(x, y, 'ro', label='Original data')
-plt.plot(x, predictions, label='Fitted line')
-plt.title('Linear Regression Result')
-plt.legend()
-plt.show()
+print("Test loss =", test_loss.numpy())
