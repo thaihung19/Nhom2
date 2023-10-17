@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 
-
 def on_scale_change(value):
     global scale_factor
     scale_factor = float(value)
@@ -12,21 +11,40 @@ def on_scale_change(value):
 def update_images():
     # Tạo ảnh co dãn
     zoomed_img = cv2.resize(original_image, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LINEAR)
-    cv2.imshow('img goc', original_image)
-    cv2.imshow('img co dan', zoomed_img)
-original_image = cv2.imread(r'C:\Users\DIEN MAY XANH\OneDrive\Pictures\Saved Pictures\anhmau.jpg')
-
+    # Chuyển đổi mảng NumPy thành hình ảnh RGB
+    zoomed_img_rgb = cv2.cvtColor(zoomed_img, cv2.COLOR_BGR2RGB)
+    # Tạo ảnh từ mảng NumPy để hiển thị trên giao diện
+    zoomed_img_tk = ImageTk.PhotoImage(Image.fromarray(zoomed_img_rgb))
+    
+    # Hiển thị ảnh gốc và ảnh co dãn trên giao diện
+    img_label_original.config(image=img_tk)
+    img_label_zoomed.config(image=zoomed_img_tk)
+    img_label_zoomed.image = zoomed_img_tk  # Giữ tham chiếu để tránh việc bị thu hồi
 
 root = tk.Tk()
 root.title("Zoom Image")
-root.geometry('500x500')
+root.geometry('800x400')
+
+# Đọc ảnh gốc
+original_image = cv2.imread('path/to/your/image.jpg') #đọc đường dẫn trên máy
+original_image_rgb = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
+img_tk = ImageTk.PhotoImage(Image.fromarray(original_image_rgb))
+
+# Label để hiển thị ảnh gốc
+img_label_original = ttk.Label(root, image=img_tk)
+img_label_original.pack()
 
 scale_label = ttk.Label(root, text="Tỉ lệ zoom:")
 scale_label.pack()
 
+# Slider để điều chỉnh tỉ lệ zoom
 scale_slider = ttk.Scale(root, from_=0.1, to=2, orient="horizontal", command=on_scale_change)
 scale_slider.set(1.0)
 scale_slider.pack()
+
+# Label để hiển thị ảnh co dãn
+img_label_zoomed = ttk.Label(root)
+img_label_zoomed.pack()
 
 scale_factor = 1.0
 update_images()
