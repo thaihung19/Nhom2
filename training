@@ -6,14 +6,14 @@ import pandas as pd
 # Load data from CSV file
 df = pd.read_csv('Student_Performance.csv')
 
-# Split the data into training and testing sets (50% training, 50% testing)
-split_ratio = 0.5
+# Split the data into training and testing sets (80% training, 20% testing)
+split_ratio = 0.8
 split_index = int(len(df) * split_ratio)
 train_data = df.iloc[:split_index]
 test_data = df.iloc[split_index:]
 
 # Extract features and target from the data
-train_x = train_data.drop('Performance Index', axis=1).values  # Chuyển dữ liệu thành mảng NumPy
+train_x = train_data.drop('Performance Index', axis=1).values
 train_y = train_data['Performance Index'].values
 
 # Create a model for the data
@@ -21,25 +21,20 @@ X = tf.constant(train_x, dtype=tf.float32)
 Y = tf.constant(train_y, dtype=tf.float32)
 
 # Initialize variables (weights and bias)
-W = tf.Variable(np.random.randn(train_x.shape[1], 1), name="W", dtype=tf.float32)  # Sử dụng train_x.shape[1] thay vì len(train_x.columns)
-b = tf.Variable(np.random.randn(), name="b", dtype=tf.float32)
+W = tf.Variable(tf.random.normal((train_x.shape[1], 1), dtype=tf.float32), name="W")
+b = tf.Variable(tf.random.normal((1,), dtype=tf.float32), name="b")
 
-# Set learning rate
+# Set learning rate and number of training epochs
 learning_rate = 0.01
-
-# Number of training epochs
 training_epochs = 100
 
-
-# Linear regression model
+# Define the linear regression model
 def linear_regression(x):
     return tf.matmul(x, W) + b
 
-
-# Mean Squared Error Cost Function
+# Define the mean squared error cost function
 def mean_squared_error(y_true, y_pred):
     return tf.reduce_mean(tf.square(y_true - y_pred) / 2)
-
 
 # Optimization using Gradient Descent
 optimizer = tf.optimizers.SGD(learning_rate)
@@ -53,7 +48,7 @@ for epoch in range(training_epochs):
     gradients = tape.gradient(loss, [W, b])
     optimizer.apply_gradients(zip(gradients, [W, b]))
 
-    if (epoch + 1) % 50 == 0:
+    if (epoch + 1) % 10 == 0:
         print("Epoch", (epoch + 1), ": loss =", loss.numpy())
 
 # Use the trained model to make predictions on the test set
@@ -64,4 +59,3 @@ test_predictions = linear_regression(test_x)
 test_loss = mean_squared_error(test_data['Performance Index'].values, test_predictions)
 
 print("Test loss =", test_loss.numpy())
-
