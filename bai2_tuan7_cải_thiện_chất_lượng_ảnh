@@ -3,6 +3,9 @@ import numpy as np
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
+from PIL import Image, ImageTk
+from functools import partial
+
 
 # Define kernels
 kernel_sharpen_1 = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
