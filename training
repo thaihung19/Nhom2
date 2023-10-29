@@ -58,4 +58,4 @@ test_x = tf.constant(test_data.drop('Performance Index', axis=1).values, dtype=t
 test_predictions = linear_regression(test_x)
 test_loss = mean_squared_error(test_data['Performance Index'].values, test_predictions)
 
-print("Test loss =", test_loss.numpy())
+print(" Test loss = ", test_loss.numpy())
